@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIST10 Final Grade Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .calculator {
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 5px;
+            display: none;
+        }
+        .grading-scale {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grade Calculator</h1>
+
+    <div class="calculator">
+        <div class="form-group">
+            <label for="test1">Test #1 Score (out of 25):</label>
+            <input type="number" id="test1" min="0" max="25" step="0.1" placeholder="Enter your Test 1 score">
+        </div>
+
+        <div class="form-group">
+            <label for="test2">Test #2 Score (out of 50):</label>
+            <input type="number" id="test2" min="0" max="50" step="0.1" placeholder="Enter your Test 2 score">
+        </div>
+
+        <div class="form-group">
+            <label for="termPaper">Term Paper Score (out of 50):</label>
+            <input type="number" id="termPaper" min="0" max="50" step="0.1" placeholder="Enter your Term Paper score">
+        </div>
+
+        <div class="form-group">
+            <label for="discussion">Discussion Section Score (out of 50):</label>
+            <input type="number" id="discussion" min="0" max="50" step="0.1" placeholder="Enter your Discussion Section score">
+        </div>
+
+        <div class="form-group">
+            <label for="desiredGrade">Desired Final Grade (percentage):</label>
+            <input type="number" id="desiredGrade" min="0" max="100" step="0.1" placeholder="Enter your desired grade (e.g., 90 for an A-)">
+        </div>
+
+        <button onclick="calculateRequiredScore()">Calculate Required Test 3 Score</button>
+
+        <div class="result" id="result">
+            <p id="resultText"></p>
+        </div>
+
+        <div class="grading-scale">
+            <p><strong>Grading Scale:</strong></p>
+            <p>Test #1: 25 points<br>
+            Test #2: 50 points<br>
+            Term Paper: 50 points<br>
+            Discussion Section: 50 points<br>
+            Test #3: 75 points<br>
+            Total: 250 points</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateRequiredScore() {
+            // Get input values
+            const test1 = parseFloat(document.getElementById('test1').value) || 0;
+            const test2 = parseFloat(document.getElementById('test2').value) || 0;
+            const termPaper = parseFloat(document.getElementById('termPaper').value) || 0;
+            const discussion = parseFloat(document.getElementById('discussion').value) || 0;
+            const desiredGrade = parseFloat(document.getElementById('desiredGrade').value) || 0;
+
+            // Validate inputs
+            if (test1 < 0 || test1 > 25) {
+                alert("Test 1 score must be between 0 and 25");
+                return;
+            }
+            if (test2 < 0 || test2 > 50) {
+                alert("Test 2 score must be between 0 and 50");
+                return;
+            }
+            if (termPaper < 0 || termPaper > 50) {
+                alert("Term Paper score must be between 0 and 50");
+                return;
+            }
+            if (discussion < 0 || discussion > 50) {
+                alert("Discussion Section score must be between 0 and 50");
+                return;
+            }
+            if (desiredGrade < 0 || desiredGrade > 100) {
+                alert("Desired grade must be between 0 and 100");
+                return;
+            }
+
+            // Calculate required Test 3 score
+            const totalPoints = 250;
+            const test3MaxPoints = 75;
+            const currentPoints = test1 + test2 + termPaper + discussion;
+            const desiredPoints = (desiredGrade / 100) * totalPoints;
+            const requiredTest3Points = desiredPoints - currentPoints;
+            const requiredTest3Percentage = (requiredTest3Points / test3MaxPoints) * 100;
+
+            // Display result
+            const resultElement = document.getElementById('result');
+            const resultTextElement = document.getElementById('resultText');
+
+            if (requiredTest3Points > test3MaxPoints) {
+                resultTextElement.innerHTML = `<strong>Not possible to achieve ${desiredGrade}% in the class.</strong>` +
+                    `Even with a perfect score on Test 3, your maximum possible grade would be ${((currentPoints + test3MaxPoints) / totalPoints * 100).toFixed(2)}%.`;
+            } else if (requiredTest3Points < 0) {
+                resultTextElement.innerHTML = `<strong>You've already achieved higher than ${desiredGrade}%!</strong>` +
+                    `Your current grade without Test 3 is ${((currentPoints / (totalPoints - test3MaxPoints)) * 100).toFixed(2)}%.`;
+            } else {
+                resultTextElement.innerHTML = `<strong>To achieve ${desiredGrade}% in the class, you need: </strong>` +
+                    `${requiredTest3Percentage.toFixed(2)}% on Test 3` +
+                    `(${requiredTest3Points.toFixed(2)} out of 75 points)`;
+            }
+
+            resultElement.style.display = "block";
+        }
+    </script>
+</body>
+</html>
