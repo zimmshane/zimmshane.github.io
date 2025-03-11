@@ -65,7 +65,7 @@
     </style>
 </head>
 <body>
-    <h1>Grade Calculator</h1>
+    <h1>HIST 10 Grade Calculator</h1>
 
     <div class="calculator">
         <div class="form-group">
@@ -89,8 +89,8 @@
         </div>
 
         <div class="form-group">
-            <label for="desiredGrade">Desired Final Grade (percentage):</label>
-            <input type="number" id="desiredGrade" min="0" max="100" step="0.1" placeholder="Enter your desired grade (e.g., 90 for an A-)">
+            <label for="desiredGrade">Desired Final Grade (%):</label>
+            <input type="number" id="desiredGrade" min="0" max="100" step="0.1" placeholder="Enter your desired grade (e.g., 95, 80, 73)">
         </div>
 
         <button onclick="calculateRequiredScore()">Calculate Required Test 3 Score</button>
@@ -161,8 +161,8 @@
                     `Your current grade without Test 3 is ${((currentPoints / (totalPoints - test3MaxPoints)) * 100).toFixed(2)}%.`;
             } else {
                 resultTextElement.innerHTML = `<strong>To achieve ${desiredGrade}% in the class, you need: </strong>` +
-                    `${requiredTest3Percentage.toFixed(2)}% on Test 3` +
-                    `(${requiredTest3Points.toFixed(2)} out of 75 points)`;
+                    ` ${requiredTest3Percentage.toFixed(2)}% on Test 3` +
+                    ` (${requiredTest3Points.toFixed(2)} out of 75 points)`;
             }
 
             resultElement.style.display = "block";
